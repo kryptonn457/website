@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Calculator</title>
+    <title>Sulphated Ash Calculator</title>
     <!-- Use Inter font -->
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap">
     <!-- Tailwind CSS CDN -->
@@ -18,134 +18,97 @@
             min-height: 100vh;
             padding: 1rem;
         }
-
-        .calc-btn {
-            @apply p-4 m-1 rounded-full text-2xl font-semibold transition-transform duration-100 ease-in-out transform hover:scale-105 active:scale-95;
+        .input-field {
+            @apply w-full p-3 mb-4 text-xl bg-gray-900 rounded-lg border border-gray-700 text-white focus:outline-none focus:ring-2 focus:ring-purple-600;
+        }
+        .label {
+            @apply block text-sm font-medium text-gray-400 mb-1;
+        }
+        .btn {
+            @apply w-full p-3 text-xl font-bold rounded-lg transition-transform duration-100 ease-in-out transform hover:scale-105 active:scale-95;
         }
     </style>
 </head>
 <body class="bg-gray-900 text-gray-100">
 
     <!-- Main calculator container -->
-    <div class="w-full max-w-sm bg-gray-800 p-6 rounded-3xl shadow-xl border-2 border-gray-700">
+    <div class="w-full max-w-lg bg-gray-800 p-8 rounded-3xl shadow-xl border-2 border-gray-700">
+        <h1 class="text-3xl font-bold text-center mb-6 text-purple-400">Sulphated Ash Calculator</h1>
 
-        <!-- Calculator display screen -->
-        <div class="mb-6">
-            <input type="text" id="display" class="w-full h-20 text-4xl text-right p-4 bg-gray-900 rounded-2xl border border-gray-700 text-white focus:outline-none" readonly value="0">
+        <!-- Input fields for 'a' and 'c' -->
+        <div class="mb-4">
+            <label for="inputA" class="label">Weight of empty crucible (a) in g</label>
+            <input type="number" id="inputA" class="input-field" placeholder="Enter value for 'a'" step="any">
+        </div>
+        <div class="mb-4">
+            <label for="inputC" class="label">Weight of sample (c) in g</label>
+            <input type="number" id="inputC" class="input-field" placeholder="Enter value for 'c'" step="any">
         </div>
 
-        <!-- Buttons grid -->
-        <div class="grid grid-cols-4 gap-4">
-            <!-- Clear button -->
-            <button class="calc-btn bg-red-600 text-white col-span-2 hover:bg-red-700 active:bg-red-800" onclick="clearDisplay()">C</button>
-            <!-- Backspace button -->
-            <button class="calc-btn bg-gray-600 text-white hover:bg-gray-700 active:bg-gray-800" onclick="backspace()">←</button>
-            <!-- Division button -->
-            <button class="calc-btn bg-purple-600 text-white hover:bg-purple-700 active:bg-purple-800" onclick="appendOperator('/')">/</button>
-
-            <!-- Number buttons and operators -->
-            <button class="calc-btn bg-gray-700 text-white hover:bg-gray-600 active:bg-gray-500" onclick="appendNumber('7')">7</button>
-            <button class="calc-btn bg-gray-700 text-white hover:bg-gray-600 active:bg-gray-500" onclick="appendNumber('8')">8</button>
-            <button class="calc-btn bg-gray-700 text-white hover:bg-gray-600 active:bg-gray-500" onclick="appendNumber('9')">9</button>
-            <button class="calc-btn bg-purple-600 text-white hover:bg-purple-700 active:bg-purple-800" onclick="appendOperator('*')">×</button>
-
-            <button class="calc-btn bg-gray-700 text-white hover:bg-gray-600 active:bg-gray-500" onclick="appendNumber('4')">4</button>
-            <button class="calc-btn bg-gray-700 text-white hover:bg-gray-600 active:bg-gray-500" onclick="appendNumber('5')">5</button>
-            <button class="calc-btn bg-gray-700 text-white hover:bg-gray-600 active:bg-gray-500" onclick="appendNumber('6')">6</button>
-            <button class="calc-btn bg-purple-600 text-white hover:bg-purple-700 active:bg-purple-800" onclick="appendOperator('-')">-</button>
-
-            <button class="calc-btn bg-gray-700 text-white hover:bg-gray-600 active:bg-gray-500" onclick="appendNumber('1')">1</button>
-            <button class="calc-btn bg-gray-700 text-white hover:bg-gray-600 active:bg-gray-500" onclick="appendNumber('2')">2</button>
-            <button class="calc-btn bg-gray-700 text-white hover:bg-gray-600 active:bg-gray-500" onclick="appendNumber('3')">3</button>
-            <button class="calc-btn bg-purple-600 text-white hover:bg-purple-700 active:bg-purple-800" onclick="appendOperator('+')">+</button>
-            
-            <button class="calc-btn bg-gray-700 text-white hover:bg-gray-600 active:bg-gray-500" onclick="appendNumber('0')">0</button>
-            <button class="calc-btn bg-gray-700 text-white hover:bg-gray-600 active:bg-gray-500" onclick="appendDecimal()">.</button>
-            <!-- Equals button -->
-            <button class="calc-btn bg-green-600 text-white col-span-2 hover:bg-green-700 active:bg-green-800" onclick="calculate()">=</button>
+        <!-- Calculated values display -->
+        <div class="mb-4">
+            <label for="displayB" class="label">Weight of crucible + sample (b)</label>
+            <input type="text" id="displayB" class="input-field" readonly value="0.00">
         </div>
+        
+        <!-- Calculate button -->
+        <button class="btn bg-green-600 text-white hover:bg-green-700 active:bg-green-800 mb-6" onclick="calculateSulphatedAsh()">
+            Calculate Sulphated Ash
+        </button>
+
+        <!-- Final result display -->
+        <div class="mb-4">
+            <label for="displayX" class="label">Sulphated Ash (%)</label>
+            <input type="text" id="displayX" class="input-field font-bold text-purple-400" readonly value="0.00">
+        </div>
+
     </div>
 
     <script>
-        const display = document.getElementById('display');
-        let currentExpression = '';
-        let resultDisplayed = false;
+        /**
+         * Calculates the Sulphated Ash based on the provided formula.
+         * The function retrieves the values for 'a' and 'c' from the input fields,
+         * performs the necessary calculations, and then displays the results.
+         */
+        function calculateSulphatedAsh() {
+            // Get the input elements and their values
+            const inputA = document.getElementById('inputA');
+            const inputC = document.getElementById('inputC');
+            const displayB = document.getElementById('displayB');
+            const displayX = document.getElementById('displayX');
 
-        // Function to update the display
-        function updateDisplay(value) {
-            display.value = value;
-        }
+            const valA = parseFloat(inputA.value);
+            const valC = parseFloat(inputC.value);
 
-        // Function to clear the display
-        function clearDisplay() {
-            currentExpression = '';
-            updateDisplay('0');
-            resultDisplayed = false;
-        }
+            // Check if inputs are valid numbers
+            if (isNaN(valA) || isNaN(valC)) {
+                displayX.value = 'Error: Invalid input';
+                displayB.value = 'Error';
+                return;
+            }
 
-        // Function to handle number button clicks
-        function appendNumber(number) {
-            if (resultDisplayed) {
-                currentExpression = number;
-                resultDisplayed = false;
+            // Perform calculations based on the user's provided formulas
+            // 1. Calculate 'b'
+            const valB = valA + valC;
+            
+            // 2. Calculate 'd' (which is 'x')
+            // The formula provided is d = (b - c) / (b - a) * 100
+            const numerator = valB - valC;
+            const denominator = valB - valA;
+            let valX = 0;
+
+            // Prevent division by zero
+            if (denominator !== 0) {
+                valX = (numerator / denominator) * 100;
             } else {
-                currentExpression += number;
+                displayX.value = 'Error: Division by zero';
+                displayB.value = valB.toFixed(2);
+                return;
             }
-            updateDisplay(currentExpression);
-        }
-
-        // Function to handle operator button clicks
-        function appendOperator(operator) {
-            // If the last character is an operator, replace it
-            const lastChar = currentExpression.slice(-1);
-            if (['+', '-', '*', '/'].includes(lastChar)) {
-                currentExpression = currentExpression.slice(0, -1) + operator;
-            } else if (currentExpression !== '') {
-                currentExpression += operator;
-                resultDisplayed = false;
-            }
-            updateDisplay(currentExpression);
-        }
-
-        // Function to handle the decimal point
-        function appendDecimal() {
-            // Prevent adding multiple decimal points in a single number
-            const parts = currentExpression.split(/[\+\-\*\/]/);
-            const lastPart = parts[parts.length - 1];
-            if (!lastPart.includes('.')) {
-                // If expression is empty, start with "0."
-                if (currentExpression === '') {
-                    currentExpression = '0.';
-                } else {
-                    currentExpression += '.';
-                }
-            }
-            updateDisplay(currentExpression);
-        }
-
-        // Function to handle backspace
-        function backspace() {
-            if (currentExpression.length > 0 && !resultDisplayed) {
-                currentExpression = currentExpression.slice(0, -1);
-                updateDisplay(currentExpression === '' ? '0' : currentExpression);
-            }
-        }
-
-        // Function to calculate the result
-        function calculate() {
-            try {
-                // IMPORTANT: In a real-world application, using eval() is a security risk.
-                // For a simple calculator, it's a convenient way to evaluate the expression.
-                // For a more robust solution, you would need to parse the expression manually.
-                const result = eval(currentExpression);
-                updateDisplay(result);
-                currentExpression = String(result);
-                resultDisplayed = true;
-            } catch (error) {
-                updateDisplay('Error');
-                currentExpression = '';
-                resultDisplayed = true;
-            }
+            
+            // Display the results with two decimal places
+            displayB.value = valB.toFixed(2);
+            displayX.value = valX.toFixed(2) + '%';
         }
     </script>
 </body>
