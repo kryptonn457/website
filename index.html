@@ -1,0 +1,310 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My Creative Notebook Blog</title>
+    <!-- Tailwind CSS for utility-first styling -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Google Font for a handwriting-like style -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Sue+Ellen+Francisco&display=swap" rel="stylesheet">
+    <style>
+        /* Custom styles for the notebook paper effect */
+        body {
+            /* A light, off-white background color for old paper effect */
+            background-color: #fcfbf6;
+            /* A subtle linear gradient to create the notebook lines */
+            background-image: repeating-linear-gradient(#f1f1f1 0, #f1f1f1 1px, transparent 1px, transparent 24px);
+            font-family: 'Sue Ellen Francisco', cursive;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+        }
+
+        /* Styling for the "tape" element on each post card */
+        .tape {
+            position: absolute;
+            top: -10px;
+            left: 50%;
+            transform: translateX(-50%) rotate(-5deg);
+            width: 80px;
+            height: 20px;
+            background-color: rgba(220, 220, 220, 0.7); /* Light gray transparent tape */
+            border-radius: 2px;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+        }
+
+        /* Post card specific styling with a slight rotation */
+        .post-card {
+            transform: rotate(var(--rotation, 0deg));
+            transition: transform 0.2s ease-in-out;
+            will-change: transform;
+        }
+
+        .post-card:hover {
+            /* A subtle hover effect to make it feel interactive */
+            transform: scale(1.02) rotate(var(--rotation, 0deg));
+        }
+
+        /* Assigning random-ish rotations to each card for a more authentic scattered look */
+        .post-card:nth-child(3n+1) { --rotation: -1.5deg; }
+        .post-card:nth-child(3n+2) { --rotation: 2deg; }
+        .post-card:nth-child(3n+3) { --rotation: -1deg; }
+
+        /* A more subtle box-shadow for the cards */
+        .card-shadow {
+            box-shadow: 5px 5px 15px rgba(0,0,0,0.1);
+        }
+
+        /* Styling for the loading spinner */
+        .spinner {
+            border: 4px solid rgba(0, 0, 0, 0.1);
+            border-left-color: #f1f1f1;
+            border-radius: 50%;
+            width: 24px;
+            height: 24px;
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+    </style>
+</head>
+<body class="text-gray-800 antialiased">
+
+    <!-- Header Section: Mimics a top-of-the-page notebook title -->
+    <header class="py-12 md:py-20 text-center relative z-10">
+        <div class="container mx-auto px-4">
+            <h1 class="text-5xl md:text-7xl font-bold text-gray-900 leading-tight tracking-wide">
+                <span class="bg-yellow-200 px-4 py-2 rounded-lg card-shadow" style="transform: rotate(1deg); display: inline-block;">My Creative Blog</span>
+            </h1>
+            <p class="mt-4 text-xl md:text-2xl text-gray-600">Thoughts, sketches, and stories from my mind.</p>
+        </div>
+    </header>
+
+    <!-- Gemini API Content Generation Section -->
+    <section class="container mx-auto px-4 py-8 mb-10 flex flex-col items-center">
+        <div class="bg-white p-8 rounded-xl card-shadow w-full max-w-2xl">
+            <h3 class="text-3xl font-bold text-center mb-4">Need a new blog idea?</h3>
+            <p class="text-center text-gray-600 mb-6">Enter a topic and let Gemini suggest a title and summary!</p>
+            <div class="flex flex-col sm:flex-row gap-4 mb-4">
+                <input type="text" id="topicInput" placeholder="e.g., 'baking cookies' or 'my favorite hiking trails'" class="flex-grow p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-yellow-400 text-base">
+                <button id="generateBtn" class="bg-yellow-400 hover:bg-yellow-500 text-gray-900 font-bold py-3 px-6 rounded-lg transition-colors flex items-center justify-center">
+                    <span id="generateBtnText">✨ Generate a New Post Idea ✨</span>
+                    <div id="loadingSpinner" class="spinner ml-2 hidden"></div>
+                </button>
+            </div>
+            <div id="newPostOutput" class="mt-4">
+                <!-- Generated content will be inserted here -->
+            </div>
+        </div>
+    </section>
+
+    <!-- Main Content: A grid of "old picture card" blog posts -->
+    <main class="container mx-auto px-4 py-8">
+        <section id="postsGrid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-10 lg:gap-16">
+
+            <!-- Example Post Card 1 -->
+            <a href="#" class="block post-card relative bg-white rounded-xl overflow-hidden card-shadow">
+                <div class="tape"></div>
+                <img src="https://placehold.co/600x400/808080/FFFFFF?text=Post+Image+1" alt="A beautiful landscape" class="w-full h-48 object-cover">
+                <div class="p-6">
+                    <h2 class="text-3xl font-bold mb-2">Adventures in the Wild</h2>
+                    <p class="text-gray-700 text-lg mb-4 leading-snug">
+                        Spent a weekend exploring the great outdoors. The views were breathtaking and the air was crisp...
+                    </p>
+                    <p class="text-gray-500 text-sm">March 10, 2024</p>
+                </div>
+            </a>
+
+            <!-- Example Post Card 2 -->
+            <a href="#" class="block post-card relative bg-white rounded-xl overflow-hidden card-shadow">
+                <div class="tape"></div>
+                <img src="https://placehold.co/600x400/B0C4DE/FFFFFF?text=Post+Image+2" alt="A coffee cup and notebook" class="w-full h-48 object-cover">
+                <div class="p-6">
+                    <h2 class="text-3xl font-bold mb-2">My Favorite Reading Nook</h2>
+                    <p class="text-gray-700 text-lg mb-4 leading-snug">
+                        Finding the perfect spot to read is an art form. Here's a peek at my cozy little sanctuary...
+                    </p>
+                    <p class="text-gray-500 text-sm">March 8, 2024</p>
+                </div>
+            </a>
+
+            <!-- Example Post Card 3 -->
+            <a href="#" class="block post-card relative bg-white rounded-xl overflow-hidden card-shadow">
+                <div class="tape"></div>
+                <img src="https://placehold.co/600x400/E5A89E/FFFFFF?text=Post+Image+3" alt="A close up of paint brushes" class="w-full h-48 object-cover">
+                <div class="p-6">
+                    <h2 class="text-3xl font-bold mb-2">Creating with Color</h2>
+                    <p class="text-gray-700 text-lg mb-4 leading-snug">
+                        A look into my process of mixing and applying color. It's all about the mood and the feeling...
+                    </p>
+                    <p class="text-gray-500 text-sm">March 5, 2024</p>
+                </div>
+            </a>
+
+            <!-- Example Post Card 4 -->
+            <a href="#" class="block post-card relative bg-white rounded-xl overflow-hidden card-shadow">
+                <div class="tape"></div>
+                <img src="https://placehold.co/600x400/99C2A2/FFFFFF?text=Post+Image+4" alt="An old camera on a wooden table" class="w-full h-48 object-cover">
+                <div class="p-6">
+                    <h2 class="text-3xl font-bold mb-2">Discovering Old Photos</h2>
+                    <p class="text-gray-700 text-lg mb-4 leading-snug">
+                        I found an old box of my grandfather's photos and got lost in a different era. The stories they tell...
+                    </p>
+                    <p class="text-gray-500 text-sm">March 3, 2024</p>
+                </div>
+            </a>
+
+            <!-- Example Post Card 5 -->
+            <a href="#" class="block post-card relative bg-white rounded-xl overflow-hidden card-shadow">
+                <div class="tape"></div>
+                <img src="https://placehold.co/600x400/FFDAB9/FFFFFF?text=Post+Image+5" alt="A freshly baked loaf of bread" class="w-full h-48 object-cover">
+                <div class="p-6">
+                    <h2 class="text-3xl font-bold mb-2">My Quest for the Perfect Loaf</h2>
+                    <p class="text-gray-700 text-lg mb-4 leading-snug">
+                        From kneading to proofing, I'm documenting my journey to bake the most delicious bread imaginable...
+                    </p>
+                    <p class="text-gray-500 text-sm">March 1, 2024</p>
+                </div>
+            </a>
+
+            <!-- Example Post Card 6 -->
+            <a href="#" class="block post-card relative bg-white rounded-xl overflow-hidden card-shadow">
+                <div class="tape"></div>
+                <img src="https://placehold.co/600x400/C1C1C1/FFFFFF?text=Post+Image+6" alt="A sketchbook with doodles" class="w-full h-48 object-cover">
+                <div class="p-6">
+                    <h2 class="text-3xl font-bold mb-2">Doodles and Daydreams</h2>
+                    <p class="text-gray-700 text-lg mb-4 leading-snug">
+                        Sometimes the best ideas come from simple doodles. A look inside my sketchbook and the thoughts behind the lines...
+                    </p>
+                    <p class="text-gray-500 text-sm">February 28, 2024</p>
+                </div>
+            </a>
+
+        </section>
+    </main>
+
+    <!-- Footer Section -->
+    <footer class="py-8 text-center text-gray-500 text-sm">
+        <p>&copy; 2024 My Creative Blog. All rights reserved.</p>
+    </footer>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const topicInput = document.getElementById('topicInput');
+            const generateBtn = document.getElementById('generateBtn');
+            const generateBtnText = document.getElementById('generateBtnText');
+            const loadingSpinner = document.getElementById('loadingSpinner');
+            const newPostOutput = document.getElementById('newPostOutput');
+            const postsGrid = document.getElementById('postsGrid');
+
+            // Function to handle the generation process
+            generateBtn.addEventListener('click', async () => {
+                const topic = topicInput.value.trim();
+                if (!topic) {
+                    alert('Please enter a topic to generate a post idea!');
+                    return;
+                }
+
+                // Show loading state
+                generateBtnText.textContent = 'Generating...';
+                loadingSpinner.classList.remove('hidden');
+                generateBtn.disabled = true;
+                newPostOutput.innerHTML = '';
+
+                try {
+                    let chatHistory = [];
+                    const prompt = `Generate a creative blog post idea about "${topic}". The response should be a JSON object with two fields: "title" and "summary". The title should be a catchy headline and the summary should be a brief, intriguing paragraph (2-3 sentences) about the post's content. Do not include any other text or markdown outside of the JSON object.`;
+                    chatHistory.push({ role: "user", parts: [{ text: prompt }] });
+                    
+                    const payload = {
+                        contents: chatHistory,
+                        generationConfig: {
+                            responseMimeType: "application/json",
+                            responseSchema: {
+                                type: "OBJECT",
+                                properties: {
+                                    "title": { "type": "STRING" },
+                                    "summary": { "type": "STRING" }
+                                },
+                                "propertyOrdering": ["title", "summary"]
+                            }
+                        }
+                    };
+                    
+                    const apiKey = ""; // Canvas will provide this automatically.
+                    const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-preview-05-20:generateContent?key=${apiKey}`;
+
+                    const response = await fetch(apiUrl, {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify(payload)
+                    });
+
+                    const result = await response.json();
+                    
+                    if (result.candidates && result.candidates.length > 0 &&
+                        result.candidates[0].content && result.candidates[0].content.parts &&
+                        result.candidates[0].content.parts.length > 0) {
+                        const json = result.candidates[0].content.parts[0].text;
+                        const postData = JSON.parse(json);
+
+                        // Display the generated post idea
+                        newPostOutput.innerHTML = `
+                            <div class="border border-gray-200 bg-gray-50 rounded-lg p-6 mb-4">
+                                <h4 class="text-2xl font-bold mb-2">${postData.title}</h4>
+                                <p class="text-gray-700 text-lg">${postData.summary}</p>
+                                <button id="addPostBtn" class="mt-4 bg-gray-800 hover:bg-gray-700 text-white font-bold py-2 px-4 rounded-lg transition-colors">
+                                    Add Post to Blog
+                                </button>
+                            </div>
+                        `;
+
+                        // Add event listener to the new button to add the post to the grid
+                        const addPostBtn = document.getElementById('addPostBtn');
+                        addPostBtn.addEventListener('click', () => {
+                            const newPostCard = document.createElement('a');
+                            newPostCard.href = '#';
+                            newPostCard.className = 'block post-card relative bg-white rounded-xl overflow-hidden card-shadow';
+                            const randomRotation = Math.random() * 4 - 2; // Random rotation between -2 and 2 degrees
+                            newPostCard.style.setProperty('--rotation', `${randomRotation}deg`);
+                            const placeholderImage = `https://placehold.co/600x400/${Math.floor(Math.random()*16777215).toString(16)}/FFFFFF?text=${encodeURIComponent(postData.title)}`;
+                            const today = new Date().toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' });
+
+                            newPostCard.innerHTML = `
+                                <div class="tape"></div>
+                                <img src="${placeholderImage}" alt="${postData.title}" class="w-full h-48 object-cover">
+                                <div class="p-6">
+                                    <h2 class="text-3xl font-bold mb-2">${postData.title}</h2>
+                                    <p class="text-gray-700 text-lg mb-4 leading-snug">
+                                        ${postData.summary}
+                                    </p>
+                                    <p class="text-gray-500 text-sm">${today}</p>
+                                </div>
+                            `;
+                            postsGrid.appendChild(newPostCard);
+                            newPostOutput.innerHTML = ''; // Clear the output area
+                        });
+
+                    } else {
+                        newPostOutput.innerHTML = '<p class="text-red-500">Error: Could not generate a post idea. Please try again.</p>';
+                    }
+
+                } catch (error) {
+                    console.error('Error generating post idea:', error);
+                    newPostOutput.innerHTML = '<p class="text-red-500">Error: Something went wrong. Please check the console for details.</p>';
+                } finally {
+                    // Reset loading state
+                    generateBtnText.textContent = '✨ Generate a New Post Idea ✨';
+                    loadingSpinner.classList.add('hidden');
+                    generateBtn.disabled = false;
+                }
+            });
+        });
+    </script>
+</body>
+</html>
