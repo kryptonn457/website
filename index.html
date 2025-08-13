@@ -3,162 +3,150 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>My Creative Notebook Blog</title>
-    <!-- Tailwind CSS for utility-first styling -->
+    <title>Calculator</title>
+    <!-- Use Inter font -->
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap">
+    <!-- Tailwind CSS CDN -->
     <script src="https://cdn.tailwindcss.com"></script>
-    <!-- Google Font for a handwriting-like style -->
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Sue+Ellen+Francisco&display=swap" rel="stylesheet">
     <style>
-        /* Custom styles for the notebook paper effect */
         body {
-            /* A light, off-white background color for old paper effect */
-            background-color: #fcfbf6;
-            /* A subtle linear gradient to create the notebook lines */
-            background-image: repeating-linear-gradient(#f1f1f1 0, #f1f1f1 1px, transparent 1px, transparent 24px);
-            font-family: 'Sue Ellen Francisco', cursive;
-            -webkit-font-smoothing: antialiased;
-            -moz-osx-font-smoothing: grayscale;
+            font-family: 'Inter', sans-serif;
+            background-color: #0e0e1a;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            padding: 1rem;
         }
 
-        /* Styling for the "tape" element on each post card */
-        .tape {
-            position: absolute;
-            top: -10px;
-            left: 50%;
-            transform: translateX(-50%) rotate(-5deg);
-            width: 80px;
-            height: 20px;
-            background-color: rgba(220, 220, 220, 0.7); /* Light gray transparent tape */
-            border-radius: 2px;
-            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
-        }
-
-        /* Post card specific styling with a slight rotation */
-        .post-card {
-            transform: rotate(var(--rotation, 0deg));
-            transition: transform 0.2s ease-in-out;
-            will-change: transform;
-        }
-
-        .post-card:hover {
-            /* A subtle hover effect to make it feel interactive */
-            transform: scale(1.02) rotate(var(--rotation, 0deg));
-        }
-
-        /* Assigning random-ish rotations to each card for a more authentic scattered look */
-        .post-card:nth-child(3n+1) { --rotation: -1.5deg; }
-        .post-card:nth-child(3n+2) { --rotation: 2deg; }
-        .post-card:nth-child(3n+3) { --rotation: -1deg; }
-
-        /* A more subtle box-shadow for the cards */
-        .card-shadow {
-            box-shadow: 5px 5px 15px rgba(0,0,0,0.1);
+        .calc-btn {
+            @apply p-4 m-1 rounded-full text-2xl font-semibold transition-transform duration-100 ease-in-out transform hover:scale-105 active:scale-95;
         }
     </style>
 </head>
-<body class="text-gray-800 antialiased">
+<body class="bg-gray-900 text-gray-100">
 
-    <!-- Header Section: Mimics a top-of-the-page notebook title -->
-    <header class="py-12 md:py-20 text-center relative z-10">
-        <div class="container mx-auto px-4">
-            <h1 class="text-5xl md:text-7xl font-bold text-gray-900 leading-tight tracking-wide">
-                <span class="bg-yellow-200 px-4 py-2 rounded-lg card-shadow" style="transform: rotate(1deg); display: inline-block;">My Creative Blog</span>
-            </h1>
-            <p class="mt-4 text-xl md:text-2xl text-gray-600">Thoughts, sketches, and stories from my mind.</p>
+    <!-- Main calculator container -->
+    <div class="w-full max-w-sm bg-gray-800 p-6 rounded-3xl shadow-xl border-2 border-gray-700">
+
+        <!-- Calculator display screen -->
+        <div class="mb-6">
+            <input type="text" id="display" class="w-full h-20 text-4xl text-right p-4 bg-gray-900 rounded-2xl border border-gray-700 text-white focus:outline-none" readonly value="0">
         </div>
-    </header>
 
-    <!-- Main Content: A grid of "old picture card" blog posts -->
-    <main class="container mx-auto px-4 py-8">
-        <section id="postsGrid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-10 lg:gap-16">
+        <!-- Buttons grid -->
+        <div class="grid grid-cols-4 gap-4">
+            <!-- Clear button -->
+            <button class="calc-btn bg-red-600 text-white col-span-2 hover:bg-red-700 active:bg-red-800" onclick="clearDisplay()">C</button>
+            <!-- Backspace button -->
+            <button class="calc-btn bg-gray-600 text-white hover:bg-gray-700 active:bg-gray-800" onclick="backspace()">←</button>
+            <!-- Division button -->
+            <button class="calc-btn bg-purple-600 text-white hover:bg-purple-700 active:bg-purple-800" onclick="appendOperator('/')">/</button>
 
-            <!-- Example Post Card 1 -->
-            <a href="#" class="block post-card relative bg-white rounded-xl overflow-hidden card-shadow">
-                <div class="tape"></div>
-                <img src="https://placehold.co/600x400/808080/FFFFFF?text=Post+Image+1" alt="A beautiful landscape" class="w-full h-48 object-cover">
-                <div class="p-6">
-                    <h2 class="text-3xl font-bold mb-2">Adventures in the Wild</h2>
-                    <p class="text-gray-700 text-lg mb-4 leading-snug">
-                        Spent a weekend exploring the great outdoors. The views were breathtaking and the air was crisp...
-                    </p>
-                    <p class="text-gray-500 text-sm">March 10, 2024</p>
-                </div>
-            </a>
+            <!-- Number buttons and operators -->
+            <button class="calc-btn bg-gray-700 text-white hover:bg-gray-600 active:bg-gray-500" onclick="appendNumber('7')">7</button>
+            <button class="calc-btn bg-gray-700 text-white hover:bg-gray-600 active:bg-gray-500" onclick="appendNumber('8')">8</button>
+            <button class="calc-btn bg-gray-700 text-white hover:bg-gray-600 active:bg-gray-500" onclick="appendNumber('9')">9</button>
+            <button class="calc-btn bg-purple-600 text-white hover:bg-purple-700 active:bg-purple-800" onclick="appendOperator('*')">×</button>
 
-            <!-- Example Post Card 2 -->
-            <a href="#" class="block post-card relative bg-white rounded-xl overflow-hidden card-shadow">
-                <div class="tape"></div>
-                <img src="https://placehold.co/600x400/B0C4DE/FFFFFF?text=Post+Image+2" alt="A coffee cup and notebook" class="w-full h-48 object-cover">
-                <div class="p-6">
-                    <h2 class="text-3xl font-bold mb-2">My Favorite Reading Nook</h2>
-                    <p class="text-gray-700 text-lg mb-4 leading-snug">
-                        Finding the perfect spot to read is an art form. Here's a peek at my cozy little sanctuary...
-                    </p>
-                    <p class="text-gray-500 text-sm">March 8, 2024</p>
-                </div>
-            </a>
+            <button class="calc-btn bg-gray-700 text-white hover:bg-gray-600 active:bg-gray-500" onclick="appendNumber('4')">4</button>
+            <button class="calc-btn bg-gray-700 text-white hover:bg-gray-600 active:bg-gray-500" onclick="appendNumber('5')">5</button>
+            <button class="calc-btn bg-gray-700 text-white hover:bg-gray-600 active:bg-gray-500" onclick="appendNumber('6')">6</button>
+            <button class="calc-btn bg-purple-600 text-white hover:bg-purple-700 active:bg-purple-800" onclick="appendOperator('-')">-</button>
 
-            <!-- Example Post Card 3 -->
-            <a href="#" class="block post-card relative bg-white rounded-xl overflow-hidden card-shadow">
-                <div class="tape"></div>
-                <img src="https://placehold.co/600x400/E5A89E/FFFFFF?text=Post+Image+3" alt="A close up of paint brushes" class="w-full h-48 object-cover">
-                <div class="p-6">
-                    <h2 class="text-3xl font-bold mb-2">Creating with Color</h2>
-                    <p class="text-gray-700 text-lg mb-4 leading-snug">
-                        A look into my process of mixing and applying color. It's all about the mood and the feeling...
-                    </p>
-                    <p class="text-gray-500 text-sm">March 5, 2024</p>
-                </div>
-            </a>
+            <button class="calc-btn bg-gray-700 text-white hover:bg-gray-600 active:bg-gray-500" onclick="appendNumber('1')">1</button>
+            <button class="calc-btn bg-gray-700 text-white hover:bg-gray-600 active:bg-gray-500" onclick="appendNumber('2')">2</button>
+            <button class="calc-btn bg-gray-700 text-white hover:bg-gray-600 active:bg-gray-500" onclick="appendNumber('3')">3</button>
+            <button class="calc-btn bg-purple-600 text-white hover:bg-purple-700 active:bg-purple-800" onclick="appendOperator('+')">+</button>
+            
+            <button class="calc-btn bg-gray-700 text-white hover:bg-gray-600 active:bg-gray-500" onclick="appendNumber('0')">0</button>
+            <button class="calc-btn bg-gray-700 text-white hover:bg-gray-600 active:bg-gray-500" onclick="appendDecimal()">.</button>
+            <!-- Equals button -->
+            <button class="calc-btn bg-green-600 text-white col-span-2 hover:bg-green-700 active:bg-green-800" onclick="calculate()">=</button>
+        </div>
+    </div>
 
-            <!-- Example Post Card 4 -->
-            <a href="#" class="block post-card relative bg-white rounded-xl overflow-hidden card-shadow">
-                <div class="tape"></div>
-                <img src="https://placehold.co/600x400/99C2A2/FFFFFF?text=Post+Image+4" alt="An old camera on a wooden table" class="w-full h-48 object-cover">
-                <div class="p-6">
-                    <h2 class="text-3xl font-bold mb-2">Discovering Old Photos</h2>
-                    <p class="text-gray-700 text-lg mb-4 leading-snug">
-                        I found an old box of my grandfather's photos and got lost in a different era. The stories they tell...
-                    </p>
-                    <p class="text-gray-500 text-sm">March 3, 2024</p>
-                </div>
-            </a>
+    <script>
+        const display = document.getElementById('display');
+        let currentExpression = '';
+        let resultDisplayed = false;
 
-            <!-- Example Post Card 5 -->
-            <a href="#" class="block post-card relative bg-white rounded-xl overflow-hidden card-shadow">
-                <div class="tape"></div>
-                <img src="https://placehold.co/600x400/FFDAB9/FFFFFF?text=Post+Image+5" alt="A freshly baked loaf of bread" class="w-full h-48 object-cover">
-                <div class="p-6">
-                    <h2 class="text-3xl font-bold mb-2">My Quest for the Perfect Loaf</h2>
-                    <p class="text-gray-700 text-lg mb-4 leading-snug">
-                        From kneading to proofing, I'm documenting my journey to bake the most delicious bread imaginable...
-                    </p>
-                    <p class="text-gray-500 text-sm">March 1, 2024</p>
-                </div>
-            </a>
+        // Function to update the display
+        function updateDisplay(value) {
+            display.value = value;
+        }
 
-            <!-- Example Post Card 6 -->
-            <a href="#" class="block post-card relative bg-white rounded-xl overflow-hidden card-shadow">
-                <div class="tape"></div>
-                <img src="https://placehold.co/600x400/C1C1C1/FFFFFF?text=Post+Image+6" alt="A sketchbook with doodles" class="w-full h-48 object-cover">
-                <div class="p-6">
-                    <h2 class="text-3xl font-bold mb-2">Doodles and Daydreams</h2>
-                    <p class="text-gray-700 text-lg mb-4 leading-snug">
-                        Sometimes the best ideas come from simple doodles. A look inside my sketchbook and the thoughts behind the lines...
-                    </p>
-                    <p class="text-gray-500 text-sm">February 28, 2024</p>
-                </div>
-            </a>
+        // Function to clear the display
+        function clearDisplay() {
+            currentExpression = '';
+            updateDisplay('0');
+            resultDisplayed = false;
+        }
 
-        </section>
-    </main>
+        // Function to handle number button clicks
+        function appendNumber(number) {
+            if (resultDisplayed) {
+                currentExpression = number;
+                resultDisplayed = false;
+            } else {
+                currentExpression += number;
+            }
+            updateDisplay(currentExpression);
+        }
 
-    <!-- Footer Section -->
-    <footer class="py-8 text-center text-gray-500 text-sm">
-        <p>&copy; 2024 My Creative Blog. All rights reserved.</p>
-    </footer>
+        // Function to handle operator button clicks
+        function appendOperator(operator) {
+            // If the last character is an operator, replace it
+            const lastChar = currentExpression.slice(-1);
+            if (['+', '-', '*', '/'].includes(lastChar)) {
+                currentExpression = currentExpression.slice(0, -1) + operator;
+            } else if (currentExpression !== '') {
+                currentExpression += operator;
+                resultDisplayed = false;
+            }
+            updateDisplay(currentExpression);
+        }
 
+        // Function to handle the decimal point
+        function appendDecimal() {
+            // Prevent adding multiple decimal points in a single number
+            const parts = currentExpression.split(/[\+\-\*\/]/);
+            const lastPart = parts[parts.length - 1];
+            if (!lastPart.includes('.')) {
+                // If expression is empty, start with "0."
+                if (currentExpression === '') {
+                    currentExpression = '0.';
+                } else {
+                    currentExpression += '.';
+                }
+            }
+            updateDisplay(currentExpression);
+        }
+
+        // Function to handle backspace
+        function backspace() {
+            if (currentExpression.length > 0 && !resultDisplayed) {
+                currentExpression = currentExpression.slice(0, -1);
+                updateDisplay(currentExpression === '' ? '0' : currentExpression);
+            }
+        }
+
+        // Function to calculate the result
+        function calculate() {
+            try {
+                // IMPORTANT: In a real-world application, using eval() is a security risk.
+                // For a simple calculator, it's a convenient way to evaluate the expression.
+                // For a more robust solution, you would need to parse the expression manually.
+                const result = eval(currentExpression);
+                updateDisplay(result);
+                currentExpression = String(result);
+                resultDisplayed = true;
+            } catch (error) {
+                updateDisplay('Error');
+                currentExpression = '';
+                resultDisplayed = true;
+            }
+        }
+    </script>
 </body>
 </html>
